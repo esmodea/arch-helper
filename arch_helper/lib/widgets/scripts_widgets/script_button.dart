@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:arch_helper/utils/classes/script_command.dart';
 import 'package:arch_helper/utils/classes/script_response.dart';
+import 'package:arch_helper/utils/classes/service_locator.dart';
 import 'package:flutter/material.dart';
 
 class ScriptButton extends StatefulWidget {
@@ -52,6 +53,7 @@ class _ScriptButtonState extends State<ScriptButton> {
     return FutureBuilder(future: _openBinaryFuture, builder: (context, asyncSnapshot) {
       debugPrint(asyncSnapshot.connectionState.toString());
       debugPrint(asyncSnapshot.data?.successful.toString());
+      debugPrint(ServiceLocator.consoleState.logger.toString());
       if(asyncSnapshot.connectionState == ConnectionState.none || asyncSnapshot.connectionState == ConnectionState.done) {
         return Container(
           padding: EdgeInsets.all(5),

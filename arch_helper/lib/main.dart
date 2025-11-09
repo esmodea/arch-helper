@@ -26,7 +26,14 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     logText = [];
     ServiceLocator.consoleState.loggerStream.stream.listen((event) {
-      logText = logText + event;
+      debugPrint('listening to stream sanity check');
+      setState(() {
+        logText = [...logText, ...event];
+      });
+    }, cancelOnError: false, onDone: () {
+      debugPrint('listening to stream done');
+    }, onError: (e) {
+      debugPrint('$e listening to stream error');
     });
     if(mounted) {
       setState(() {
@@ -39,6 +46,11 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    logText.map((e) {
+      debugPrint(e);
+      return e;
+    });
+    debugPrint(logText.length.toString());
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -111,13 +123,17 @@ class _MainAppState extends State<MainApp> {
                         ),
                         ...logText.map((text) {
                           return Text(text, style: TextStyle(color: Colors.white),);
-                        })
+                        }),
+                        ...ServiceLocator.consoleState.releaseLogs.map((text) {
+                          return Text(text, style: TextStyle(color: Colors.white),);
+                        }),
                       ],
                     ),
                     Positioned(
                       left: 2,
                       child: IconButton(
                         onPressed: () {
+                          //TODO: fix for release mode
                           Clipboard.setData(ClipboardData(text: logText.join('\n')));
                         }, 
                         icon: Icon(Icons.copy, color: Colors.white,)
@@ -127,6 +143,7 @@ class _MainAppState extends State<MainApp> {
                       left: 42,
                       child: IconButton(
                         onPressed: () {
+                          //TODO: fix for release mode
                           ServiceLocator.consoleState.togglePrettyPrinter();
                           if(mounted) {
                             setState(() {
@@ -141,6 +158,7 @@ class _MainAppState extends State<MainApp> {
                       right: 2,
                       child: IconButton(
                         onPressed: () {
+                          //TODO: fix for release mode
                           if(mounted) {
                             setState(() {
                               logText = [];

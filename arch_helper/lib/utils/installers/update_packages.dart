@@ -21,7 +21,7 @@ class UpdatePackages extends InstallerCommand {
   @override
   Future<ScriptResponse> Function() get script => () async {
     ServiceLocator.consoleState.printDebug('Updating package dependencies');
-    ProcessResult yayUpdateResult = await runExecArg(executable: 'pkexec', arguments: ['yay', '-Syu', '--noconfirm'],);
+    ProcessResult yayUpdateResult = await runExecArg(executable: 'yay', arguments: [ '-Syu', '--noconfirm'],);
     await runExecArg(executable: 'pkexec', arguments: ['flatpak', 'update', '--assumeyes'],);
     return ScriptResponse(data: yayUpdateResult,);
   };
@@ -29,7 +29,7 @@ class UpdatePackages extends InstallerCommand {
   @override
   Future<List<ScriptResponse>> Function() get scriptVerbose => () async {
     ServiceLocator.consoleState.printDebug('Updating package dependencies');
-    ProcessResult yayUpdateResult = await runExecArg(executable: 'pkexec', arguments: ['yay', '-Syu', '--noconfirm'],);
+    ProcessResult yayUpdateResult = await runExecArg(executable: 'yay', arguments: ['-Syu', '--noconfirm'],);
     ProcessResult flatpakUpdateResult = await runExecArg(executable: 'pkexec', arguments: ['flatpak', 'update', '--assumeyes'],);
     return [ScriptResponse(data: yayUpdateResult, scriptErrorMessage: yayUpdateResult.stderr != '' ? yayUpdateResult.stderr : null, exitCode: yayUpdateResult.exitCode), ScriptResponse(data: flatpakUpdateResult, scriptErrorMessage: flatpakUpdateResult.stderr != '' ? flatpakUpdateResult.stderr : null, exitCode: flatpakUpdateResult.exitCode)];
   };

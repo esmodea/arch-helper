@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:arch_helper/utils/classes/script_response.dart';
 import 'package:arch_helper/utils/classes/service_locator.dart' show ServiceLocator;
+import 'package:flutter/material.dart' show debugPrint;
 import 'package:process_run/process_run.dart' show Shell;
 import 'package:process_run/stdio.dart' show ProcessResult;
 
@@ -23,8 +24,9 @@ abstract class ScriptCommand {
         return res;
       })
       .catchError((res) {
-        ServiceLocator.consoleState.printError(res.result.stderr);
-        return res.result;
+        if(res.runtimeType.toString() == ArgumentError().runtimeType.toString()) throw res;
+        ServiceLocator.consoleState.printError(res.result?.stderr);
+        if(res.result)return res.result? res.result : null;
       });
   }
   Future<ProcessResult> openBinary({required String binaryName}) async {

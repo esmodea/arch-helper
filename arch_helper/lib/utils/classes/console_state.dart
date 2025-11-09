@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 class ConsoleState with ChangeNotifier {
   late Logger _logger = Logger(printer: _printer, output: _streamOutput);
   final StreamOutput _streamOutput = StreamOutput();
   LogPrinter _printer = SimplePrinter(colors: false);
+  final List<String> _releaseLogs = [];
 
   Logger get logger => _logger;
   StreamOutput get loggerStream => _streamOutput;
+  List<String> get releaseLogs => _releaseLogs;
 
   void setPrinter({required LogPrinter printer}) {
     _printer = printer;
@@ -30,7 +32,9 @@ class ConsoleState with ChangeNotifier {
     StackTrace? stackTrace,
   }) {
     debugPrint(message);
-    _logger = Logger(printer: _printer, output: _streamOutput);
+    List logs = '[D] $message'.split('\n');
+    logs.removeLast();
+    if(kReleaseMode)_releaseLogs.add(logs.join('\n[D] '));
     logger.d(message, time: time, error: error, stackTrace: stackTrace);
   }
 
@@ -41,7 +45,9 @@ class ConsoleState with ChangeNotifier {
     StackTrace? stackTrace,
   }) {
     debugPrint(message);
-    _logger = Logger(printer: _printer, output: _streamOutput);
+    List logs = '[E] $message'.split('\n');
+    logs.removeLast();
+    if(kReleaseMode)_releaseLogs.add(logs.join('\n[E] '));
     logger.e(message, time: time, error: error, stackTrace: stackTrace);
   }
 
@@ -52,7 +58,9 @@ class ConsoleState with ChangeNotifier {
     StackTrace? stackTrace,
   }) {
     debugPrint(message);
-    _logger = Logger(printer: _printer, output: _streamOutput);
-    logger.i(message, time: time, error: error, stackTrace: stackTrace);
+    List logs = '[I] $message'.split('\n');
+    logs.removeLast();
+    if(kReleaseMode)_releaseLogs.add(logs.join('\n[I] '));
+    logger.log(Level.warning, message, time: time, error: error, stackTrace: stackTrace);
   }
 }
