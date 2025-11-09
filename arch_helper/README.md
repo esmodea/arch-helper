@@ -1,3 +1,3 @@
-# arch_helper
+# Arch Helper 1.0.0
 
-A new Flutter project.
+A new arch script and installation client for my red40arch project.
